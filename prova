@@ -1,0 +1,22 @@
+def get_data_numerical(self):
+        data = [self.get_data_originale]
+        numerical_data=[]
+        for item in data:
+            try:
+                item[1]=float(item[1])
+                numerical_data.append(item)
+            except ValueError:
+                print('Errore. Non posso convertire "item[1]" a valore numerico')
+                print('Ho avuto un errore di VALORE. "item[1]" valeva "{}"'.     format((item[1])))
+            except TypeError:
+                print('Errore. Non posso convertire "item[1]" a valore numerico')
+                print('Ho avuto un errore di TIPO. "item[1]" valeva "{}"'. format(type(item[1])))
+            except Exception as e:
+                print('Errore. Non posso convertire "item[1]" a valore numerico')
+                print('Ho avuto un errore generico. "{}"'. format(e))
+        return numerical_data
+Shampoo = NumericalCSVFile('shampoo_sales.csv')
+print(Shampoo.name)
+Shampoo_values = Shampoo.get_data_numerical()
+print (Shampoo_values)   
+        
