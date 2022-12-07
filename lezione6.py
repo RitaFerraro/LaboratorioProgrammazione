@@ -26,6 +26,7 @@ class CSVFile:
     #Modifico la funzione get_data in modo da leggere solo un intervallo di righe, per questo aggiungo gli argomenti start e end in modo opzionale, cioe' non devo essere obbligato ad inserirli, per   questo li inizializzo a None    
     
     def get_data(self, start=None, end=None):
+        
         start_type=type(start)
         end_type=type(end)
 
@@ -58,6 +59,7 @@ class CSVFile:
             my_file = open(self.name, 'r')
             for line in my_file:
                 if not line:
+                    print('il file ')
                     break
                 elements = line.split(',')
                 elements[-1]=elements[-1].strip()
@@ -71,90 +73,113 @@ class CSVFile:
         else:
             data = []
             my_file = open(self.name, 'r')
-            file_lines= my_file.readlines()
+            file_lines=[] 
+            for line in my_file:
+                try:
+                    line=my_file.readline()
+                    file_lines.append(line)
+                except:
+                     print('riga illeggibile')
+            
             #cerco di sapere quanto e' lungo il file
             lunghezza= len(file_lines)
+            my_file.close
             
+            #=================================================
             # Ci sono sia start che end
+            #=====================================================
             if start_type == int and end_type == int and end-start>=1:
                 
                 #se start o end vanno oltre il numero di righe del file esco:
                 if start>=lunghezza or end>lunghezza:
-                    my_file.close()
+                    
                     raise Exception('intervallo di righe da leggere non e compatibile con il numero di righe del file')
                 else:
+                    
                     for i in range(start, end+1):
                         try:
-                            my_file.readline()
-                            line=my_file.readline()
+                            
+                            #my_file.readline()
+                            line=file_lines[i]
+                            #print(line)
                         except Exception as e:
                             self.can_read = False
                         
                         if not self.can_read:
-                            my_file.close()
                             raise Exception('Riga non leggibile')
                         else:
-                            if line!="":
-                                elements = line.split(',')
-                                elements[-1]=elements[-1].strip()
-                                data.append(elements)
-                            else:
-                                my_file.close()
-                                break
-            #c'e' o solo end o solo start                   
+                            #if line!="":
+                            elements = line.split(',')
+                            elements[-1]=elements[-1].strip()
+                            data.append(elements)
+                            #else:
+                                #break
+                    
+                    
+         #====================================
+            #c'e' o solo end o solo start  
+        #=========================================
             else:
                 if start is None and end_type == int:
-                    
+                    #print('Ecco end "{}"'.format(end))
                     # non voglio che end sia maggiore del numero di righe del file
                     if end> lunghezza:
-                        my_file.close()
+                        
                         raise Exception('Errore. Mi chiedi di leggere oltre la lunghezza del file')
                     else:
+                        
                         for i in range(1, end+1):
-                            line=my_file.readline()
-                            if line!= "":
-                                elements = line.split(',')
-                                elements[-1]=elements[-1].strip()
-                                data.append(elements)
-                            else:
-                                my_file.close()
-                                break
+                            
+                            
+                            line=file_lines[i]
+                            #if line!= "":
+                            elements = line.split(',')
+                            elements[-1]=elements[-1].strip()
+                            data.append(elements)
+                            #else:
+                            #    my_file.close()
+                            #    break
+                        
+                
                 if start_type == int and end is None: 
 
                     # non voglio che start sia maggiore o uguale al numero di righe del file
                     if start>=lunghezza:
-                        my_file.close()
                         raise Exception('Errore.Start inizia dopo la fine del file')
+                    
                     else:
-                        i=1
-                        while i>=start:
+                       
+                        i=start
+                        while i>= start and i<lunghezza:
+                            
                             try:
-                                line=my_file.readline()
+                                line=file_lines[i]
+            
                             except  Exception:
                                 self.can_read=False
                             
                             if not self.can_read:
                                 raise Exception('Riga illeggibile')
                             else:
-                                if line!="":
-                                    elements = line.split(',')
-                                    elements[-1]=elements[-1].strip()
-                                    data.append(elements)
-                                    i=i+1
-                                else:
-                                    my_file.close()
-                                    break
-
+                                #if line!="":
+                                elements = line.split(',')
+                                elements[-1]=elements[-1].strip()
+                                data.append(elements)
+                            i=i+1
+                                #else:
+                                # 
+                                #    break
+                        
+                
                 #se l'argomento end e' minore di start esco:
                 if start_type == int and end_type == int and end-start <= 0:
                     raise Exception('Errore')
                     
-            my_file.close()
+            return data
 
-           
-        return data
-        
-
-#Shampoo = NumericalCSVFile('shampoo_sales.csv')
-#Shampoo_data=Shampoo.get_data()
-#print(Shampoo_data)
+#==========================================================================================
+#PROVE
+#============================================================================================
+Shampoo=CSVFile('prova_vuota.csv')        
+Shampoo_data=Shampoo.get_data()
+print(Shampoo_data)
