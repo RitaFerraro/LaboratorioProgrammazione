@@ -34,10 +34,18 @@ class CSVFile:
             return None
         
         if start is not None and type(start)!=int:
-            raise Exception('parametro start non valido')
+            try:
+                start=int(start)
+            except Exception as e:
+                print('Ho avuto un errore "{}"'.format(e))
+                raise Exception('parametro start non valido')
         
         if end is not None and type(end)!=int:
-            raise Exception('parametro end non valido')
+            try:
+                end=int(end)
+            except Exception as e:
+                print('Ho avuto un errore "{}"'.format(e))
+                raise Exception('parametro end non valido')
 
                 
         if start is not None and start<=0:
@@ -95,6 +103,6 @@ class CSVFile:
 #===============================================================================================================# Le mie prove
 #===============================================================================================================       
 #Shampoo=CSVFile('shampoo_sales.csv')        
-#Shampoo_data=Shampoo.get_data(1,40)
+#Shampoo_data=Shampoo.get_data('seven',20)
 #print (len(Shampoo_data))
 #print(Shampoo_data)
