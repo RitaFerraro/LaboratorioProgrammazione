@@ -38,54 +38,63 @@ class CSVFile:
         
         if end is not None and type(end)!=int:
             raise Exception('parametro end non valido')
+
+                
+        if start is not None and start<=0:
+            raise Exception('Il parametro start "{}" non e` un indice accettabile '.format(start))
         
         if end is None:
             
             if start is None:
                 start=1
+    
             
-            if start<=0:
-                print('Errore nel parametro start "{}". Pongo start=1'.format(start))
-                start=1
             data=[]
             my_file = open(self.name, 'r')  
-            i=0
+            i=1
             for line in my_file: 
                 if i>=start:
-                    elements = line.split(',')
-                    elements[-1]=elements[-1].strip()
-                    data.append(elements)
+                    if i==1:
+                        elements=[]
+                    else:
+                        elements = line.split(',')
+                        elements[-1]=elements[-1].strip()
+                        data.append(elements)
                 i=i+1
             my_file.close
-            if i<start: 
-                raise Exception('Il parametro "{}" inserito come start inizia dopo la fine del file'.format(start))
+            if i<=start: 
+                raise Exception('Errore. Il parametro "{}" inserito come start non e` accettabile in quanto inizia dopo la fine del file'.format(start))
             return data
         
         else:
             if start is None:
                 start=1
             if start>end:
-                    raise Exception('Errore. Il parametro "{}" inserito come start risulta maggiore del parametro "{}" inserito come end'.format(start, end))
+                raise Exception('Errore. Il parametro "{}" inserito come start risulta maggiore del parametro "{}" inserito come end'.format(start, end))
             
             
             data=[]
             my_file = open(self.name, 'r')
-            i=0   
+            i=1   
             for line in my_file:
                 if i>= start and i<=end: 
-                    elements = line.split(',')
-                    elements[-1]=elements[-1].strip()
-                    data.append(elements)
+                    if i==1:
+                        elements=[]
+                    else:
+                        elements = line.split(',')
+                        elements[-1]=elements[-1].strip()
+                        data.append(elements)
                 i=i+1
             my_file.close
-            if i<start: 
+            if i<=start: 
                 raise Exception('Il parametro "{}" inserito come start inizia dopo la fine del file'.format(start))
-            if i>start and i<end: 
-                print('Errore nel parametro  end  "{}", va oltre la fine del file. Ho potuto leggere meno delle righe richieste:'.format(end))
+            if i>start and i<=end: 
+                raise Exception('Errore nel parametro  end  "{}", va oltre la fine del file.'.format(end))
             return data
 
-
-
-Shampoo=CSVFile('shampoo_sales.csv')        
-Shampoo_data=Shampoo.get_data(None,17)
-print(Shampoo_data)
+#===============================================================================================================# Le mie prove
+#===============================================================================================================       
+#Shampoo=CSVFile('shampoo_sales.csv')        
+#Shampoo_data=Shampoo.get_data(1,40)
+#print (len(Shampoo_data))
+#print(Shampoo_data)
