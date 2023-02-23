@@ -10,7 +10,7 @@ class CSVFile:
                 elements[1] = elements[1][0:-1]
                 data.append(elements)
         my_file.close()
-        if len(data)==0:
+        if len(data)==0:j
             return None
         return data
 Shampoo = CSVFile('shampoo_sales.csv')
